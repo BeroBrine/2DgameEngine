@@ -27,7 +27,8 @@ public class Window
         this.title = "Mario";
     }
 
-    public static Window get()
+    public static Window get() // getter function for the main class to use
+                                // this ensures that window gets created for only one time
     {
         if (Window.window == null)
         {
@@ -42,6 +43,14 @@ public class Window
         System.out.println("Hello LWJGL" + Version.getVersion() + "!");
         init();
         loop();
+
+        // Free the memory when the loop exits
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        // terminate GLFW and then free the error callback
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     public void init()
@@ -74,16 +83,16 @@ public class Window
         // Make the window visible
         glfwShowWindow(glfwWindow);
 
-        GL.createCapabilities();
+        GL.createCapabilities(); // impportant for OpenGL C bindings to work
     }
     public void loop()
     {
-        while (!glfwWindowShouldClose(glfwWindow))
+        while (!glfwWindowShouldClose(glfwWindow)) // glfwWindow should not get closed
         {
             // Poll events
             glfwPollEvents();
 
-            glClearColor(1.0f , 0.0f , 0.0f , 1.0f);
+            glClearColor(1.0f , 1.0f , 1.0f , 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             glfwSwapBuffers(glfwWindow);
